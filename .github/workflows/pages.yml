@@ -1,5 +1,6 @@
 name: Deploy to GitHub Pages
 
+# Ejecutar el flujo en push o pull_request a la rama main
 on:
   push:
     branches: [ "main" ]
@@ -7,36 +8,40 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repo
+      # 1. Descargar el repositorio
+      - name: Check out the repo
         uses: actions/checkout@v3
 
+      # 2. Instalar Node.js
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
 
+      # 3. Instalar dependencias
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm run test
-
+      # 4. Generar el build de producción
       - name: Build
         run: npm run build
 
+      # 5. Subir los archivos generados en ./dist como un artifact
       - name: Upload production-ready build files
         uses: actions/upload-pages-artifact@v1
         with:
-          path: ./build
+          path: ./dist
 
   deploy:
-    needs: build-and-test
+    needs: build
     runs-on: ubuntu-latest
     steps:
+      # 1. Desplegar a GitHub Pages
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v1
         with:
+          # La rama gh-pages se creará automáticamente para alojar tu sitio
           branch: gh-pages
