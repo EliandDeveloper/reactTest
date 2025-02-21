@@ -4,7 +4,10 @@ import { Task } from "../entities/Task";
 import { v4 as uuid } from "uuid";
 
 export class InMemoryTaskRepository implements ITaskRepository {
-    private tasks: Task[] = [];
+    private tasks: Task[] = [
+        new Task("abc1", "Learn React", false),
+        new Task("abc2", "Review SOLID principles", true)
+    ];
 
     async getAllTasks(): Promise<Task[]> {
         return this.tasks;

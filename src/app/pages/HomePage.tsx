@@ -4,6 +4,7 @@ import TaskList from "../components/TaskList";
 import TaskForm from "../components/TaskForm";
 import { Task } from "../../domain/entities/Task";
 import { taskService } from "../../infrastructure/dependencyInjection";
+import { Container, Typography, Box } from "@mui/material";
 
 const HomePage: React.FC = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -18,31 +19,37 @@ const HomePage: React.FC = () => {
     }, []);
 
     const handleAddTask = async (title: string) => {
-        await taskService.addTask(title);
-        loadTasks();
+        const newTask = await taskService.addTask(title);
+        setTasks((prev) => [...prev, newTask]);
     };
 
     const handleToggleCompleted = async (task: Task) => {
-        await taskService.toggleCompleted(task);
-        loadTasks();
+        const updated = await taskService.toggleCompleted(task);
+        setTasks((prev) => prev.map((t) => (t.id === updated.id ? updated : t)));
     };
 
     const handleRemoveTask = async (taskId: string) => {
         await taskService.removeTask(taskId);
-        loadTasks();
+        setTasks((prev) => prev.filter((t) => t.id !== taskId));
     };
 
     return (
-        <div style={{ maxWidth: 500, margin: "auto" }}>
-    <h1>Task Manager</h1>
-    <TaskForm onAddTask={handleAddTask} />
-    <TaskList
-    tasks={tasks}
-    onToggleCompleted={handleToggleCompleted}
-    onRemove={handleRemoveTask}
-    />
-    </div>
-);
+        <Container maxWidth="sm" sx={{ mt: 4 }}>
+            <Typography variant="h4" component="h1" gutterBottom>
+                Task Manager
+            </Typography>
+
+            <TaskForm onAddTask={handleAddTask} />
+
+            <Box sx={{ mt: 2 }}>
+                <TaskList
+                    tasks={tasks}
+                    onToggleCompleted={handleToggleCompleted}
+                    onRemove={handleRemoveTask}
+                />
+            </Box>
+        </Container>
+    );
 };
 
 export default HomePage;

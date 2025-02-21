@@ -1,5 +1,6 @@
 // src/app/components/TaskForm.tsx
 import React, { useState } from "react";
+import { Box, TextField, Button } from "@mui/material";
 
 interface TaskFormProps {
     onAddTask: (title: string) => void;
@@ -15,15 +16,28 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAddTask }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input
-                data-testid="task-input"
+        <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{
+                display: "flex",
+                gap: 2,
+                alignItems: "center",
+                mb: 3,
+            }}
+        >
+            <TextField
+                label="Nueva Tarea"
+                variant="outlined"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Enter a task"
+                size="small"
+                sx={{ flexGrow: 1 }}
             />
-            <button type="submit">Add</button>
-        </form>
+            <Button type="submit" variant="contained" color="primary">
+                Agregar
+            </Button>
+        </Box>
     );
 };
 
