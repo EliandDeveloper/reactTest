@@ -14,7 +14,7 @@ describe("TaskList component", () => {
 
         // Check that tasks are in the document
         expect(screen.getByText("Test 1")).toBeInTheDocument();
-        expect(screen.getByText("Test 2")).toBeInTheDocument();
+        expect(screen.getByText("Test 4")).toBeInTheDocument();
 
         // Toggle first task
         const checkboxes = screen.getAllByRole("checkbox");
